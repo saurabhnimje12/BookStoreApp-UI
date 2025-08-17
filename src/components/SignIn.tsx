@@ -17,6 +17,21 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signIn } from "../services/userService.tsx";
 
+/**
+ * SignIn component allows users to log in to their account.
+ * It includes a form for email and password input, handles sign-in logic,
+ * and displays success or error messages using a snackbar.
+ * The component uses Material-UI for styling and layout.
+ * It manages state for email, password, and snackbar messages.
+ * Upon successful sign-in, it stores the token in localStorage and navigates to the book page.
+ * It also provides a link to navigate to the sign-up page if the user does not have an account.
+ */
+
+
+/** * SignIn component allows users to log in to their account.
+ * It includes a form for email and password input, handles sign-in logic,
+ * and displays success or error messages using a snackbar.
+*/
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,8 +41,18 @@ const SignIn = () => {
     severity: "success" as "success" | "error",
   });
 
+  /**
+   * useNavigate hook from react-router-dom to programmatically navigate
+   */
   const navigate = useNavigate();
 
+  /**
+   * Handles the sign-in process by calling the signIn service.
+   * If successful, stores the token in localStorage and navigates to the book page.
+   * If failed, displays an error message in a snackbar.
+   * @returns {Promise<void>}
+   * 
+   */
   const handleSignIn = async () => {
     try {
       const response = await signIn({ email, password });
@@ -59,6 +84,10 @@ const SignIn = () => {
     }
   };
 
+  /**
+   * Handles closing the snackbar when the user clicks the close button or after auto-hide duration.
+   * Updates the snackbar state to close it.
+   */
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
   };

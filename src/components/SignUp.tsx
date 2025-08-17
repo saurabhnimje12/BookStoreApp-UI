@@ -16,8 +16,28 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signUp } from "../services/userService.tsx";
 
+/**
+ * SignUp component allows users to create a new account.
+ * It includes a form for user details, handles sign-up logic,
+ * and displays success or error messages using a snackbar.
+ * The component uses Material-UI for styling and layout.
+ * It manages state for user details and snackbar messages.
+ * Upon successful sign-up, it navigates to the sign-in page.
+ */
+
+/**
+ * Roles available for user selection during sign-up.
+ * This can be extended or modified based on application requirements.
+ * @constant {string[]} roles
+ * @default ["USER", "ADMIN"] 
+ */
 const roles = ["USER", "ADMIN"];
 
+/**
+ * SignUp component allows users to create a new account.
+ * It includes a form for user details, handles sign-up logic,
+ * and displays success or error messages using a snackbar.
+ */
 const SignUp = () => {
   const [form, setForm] = useState({
     firstName: "",
@@ -28,26 +48,56 @@ const SignUp = () => {
     role: "",
   });
 
+  /** * State to manage snackbar visibility and messages.
+   * It includes open status, message content, and severity level.
+   * @type {{ open: boolean; message: string; severity: "success" | "error" }}
+   */
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success", 
   });
 
+  /**
+   * useNavigate hook from react-router-dom to programmatically navigate
+   * to different routes in the application.
+   */
   const navigate = useNavigate();
 
+  /**
+   * Handles changes in the form fields.
+   * Updates the corresponding state based on user input.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input change.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Handles closing the snackbar when the user clicks the close button or after auto-hide duration.
+   * Updates the snackbar state to close it.
+   */
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  /**
+   * Displays a snackbar with a message and severity level.
+   * This function is used to show success or error messages to the user.
+   * @param {string} message - The message to display in the snackbar.
+   * @param {"success" | "error"} severity - The severity level of the message.
+   */
   const showSnackbar = (message: string, severity: "success" | "error") => {
     setSnackbar({ open: true, message, severity });
   };
 
+  /**
+   * Handles the sign-up process by calling the signUp service.
+   * Validates the form fields and displays appropriate messages.
+   * If successful, navigates to the sign-in page.
+   * If failed, displays an error message in a snackbar.
+   * @returns {Promise<void>}
+   */
   const handleSignUp = async () => {
     const { firstName, lastName, dob, email, password, role } = form;
 
