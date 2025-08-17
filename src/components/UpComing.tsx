@@ -3,6 +3,18 @@ import { AppBar, Toolbar, Typography, Box, Container, Button } from "@mui/materi
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Upcoming component displays a message indicating that the page is coming soon.
+ * It includes a header with navigation options and a button to return to the home page.
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
+
+
+/** * Upcoming component displays a message indicating that the page is coming soon.
+ * It includes a header with navigation options and a button to return to the home page.
+ * @returns {JSX.Element} The rendered component.
+ */
 const Upcoming = () => {
   const navigate = useNavigate();
 
