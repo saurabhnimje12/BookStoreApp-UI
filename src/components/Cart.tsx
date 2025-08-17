@@ -36,6 +36,18 @@ import {
 } from "../services/cartService";
 import { placeOrder } from "../services/orderService";
 
+/**
+ * Cart component that manages the shopping cart functionality.
+ * It allows users to view their cart items, update quantities,
+ * remove items, and proceed to checkout with customer details.
+ * It also includes a stepper to guide users through the cart process.
+ * It handles user authentication and navigation using React Router.
+ * It fetches cart items from the server and updates the UI accordingly.
+ * It validates customer details before placing an order.
+ * It displays an order summary before finalizing the purchase.
+ * It includes error handling for form validation and API requests. 
+ */
+
 const steps = ["My Cart", "Customer Details", "Order Summary"];
 
 const Cart = () => {
@@ -53,16 +65,30 @@ const Cart = () => {
   const [errors, setErrors] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
 
+  /**
+   * useNavigate hook from react-router-dom to programmatically navigate
+   * to different routes in the application.
+   */
   const navigate = useNavigate();
 
+  /**
+   * Fetches cart items when the component mounts and updates the total price.
+   */
   useEffect(() => {
     fetchCartItems();
   }, []);
 
+  /**
+   * Updates the total price whenever cart items change.
+   */
   useEffect(() => {
     setTotalPrice(cartItems.reduce((sum, item) => sum + item.book.price * item.cartQuantity, 0));
   }, [cartItems]);
 
+  /**
+   * Fetches cart items from the server and updates the state.
+   * Handles errors if the fetch fails.
+   */
   const fetchCartItems = async () => {
     try {
       const data = await getCartById();
@@ -72,25 +98,45 @@ const Cart = () => {
     }
   };
 
+  
+  /**
+   * Handles navigation to the upcoming page.
+   */
   const handleUpComing = () => {
   navigate("/upcoming");
   };
 
+  /**
+   * Handles the addition of a cart item.
+   * @param {number} cartId - The ID of the cart item to be added.
+   */
   const handleAdd = async (cartId: number) => {
     await increaseCartQuantity(cartId);
     fetchCartItems();
   };
 
+  /**
+   * Handles the removal of a cart item.
+   * @param {number} cartId - The ID of the cart item to be removed.
+   */
   const handleRemove = async (cartId: number) => {
     await decreaseCartQuantity(cartId);
     fetchCartItems();
   };
 
+  /**
+   * Handles the deletion of a cart item.
+   * @param {number} cartId - The ID of the cart item to be deleted.
+   */
   const handleDelete = async (cartId: number) => {
     await removeCartItem(cartId);
     fetchCartItems();
   };
 
+  /**
+   * Validates customer details before proceeding to checkout.
+   * @returns {boolean} - Returns true if all fields are valid, otherwise false.
+   */
   const validateCustomerDetails = () => {
     const newErrors = {};
     if (!name) newErrors.name = "Name is required";
@@ -105,6 +151,9 @@ const Cart = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * Handles the checkout process by validating customer details and placing the order.
+   */
   const handleCheckout = async () => {
     const token = localStorage.getItem("token");
     if (!token) return alert("Token not found");
@@ -120,6 +169,12 @@ const Cart = () => {
     }
   };
 
+  
+  /**
+   * Renders the content for each step in the cart process.
+   * @param {number} step - The current step index.
+   * @returns {JSX.Element}
+   */ 
   const renderStepContent = (step: number) => {
     switch (step) {
       case 0:

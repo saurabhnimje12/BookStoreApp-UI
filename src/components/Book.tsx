@@ -24,6 +24,28 @@ import { useNavigate } from "react-router-dom";
 import { getBooks } from "../services/bookService";
 import { addToCart } from "../services/cartService";
 
+/**
+  * Book component that displays a list of books with pagination, user account menu, and cart functionality.
+  * This component fetches books from the server, displays them in a grid format
+  * and provides functionality for pagination, user account management, and adding books to the cart.
+  * It uses Material-UI for styling and layout, and manages state for books, pagination, user account menu, and cart count.
+  * Upon clicking on a book, it allows users to add the book to their cart or wishlist.
+  * It also provides a user account menu for signing in, signing up, viewing profile,
+  * orders, wishlist, and logging out.
+  * It includes error handling for image loading and cart operations.
+ */
+
+/**
+ * Represents a book in the bookstore.
+ * @typedef {Object} Book
+ * @property {number} bookId - The unique identifier for the book.
+ * @property {string} bookName - The name of the book.
+ * @property {string} bookAuthor - The author of the book.
+ * @property {number} bookPrice - The price of the book.
+ * @property {string} bookLogoMultipart - The image path for the book cover.
+ * @property {number} bookQuantity - The available quantity of the book.
+ * @property {string} bookDescription - A brief description of the book.
+ */
 type Book = {
   bookId: number;
   bookName: string;
@@ -34,6 +56,12 @@ type Book = {
   bookDescription: string;
 };
 
+/**
+ * Book component that displays a list of books with pagination, user account menu, and cart functionality.
+ * @returns {JSX.Element} The rendered Book component.
+ * @description This component fetches books from the server, displays them in a grid format,
+ * and provides functionality for pagination, user account management, and adding books to the cart.
+ */
 const Book = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState(1);
@@ -45,6 +73,11 @@ const Book = () => {
   const token = localStorage.getItem("token");
   const isLoggedIn = Boolean(token);
 
+  /**
+   * Fetches books from the server when the component mounts.
+   * @returns {void}
+   * @description This function retrieves the list of books and updates the state.
+   */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,28 +92,64 @@ const Book = () => {
     fetchData();
   }, []);
 
+  /**
+   * Handles page change for pagination.
+   * @param {React.ChangeEvent<unknown>} _ - The event object (not used).
+   * @param {number} value - The new page number.
+   * * @returns {void}
+   * @description This function updates the current page state when the user navigates through the pagination
+   */
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
+  /**
+   * Handles the click event for the user account menu.
+   * @param {React.MouseEvent<HTMLElement>} event - The mouse event object.
+   * @returns {void}
+   * @description This function sets the anchor element for the menu to open it.
+   */
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * Closes the user account menu.
+   * @returns {void}
+   * @description This function sets the anchor element to null, effectively closing the menu.
+   */
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * Handles navigation to the upcoming page.
+   * @returns {void}
+   * @description This function navigates the user to the upcoming page.
+   */
   const handleUpComing = () => {
     navigate("/upcoming");
   };
 
+  /**
+   * Handles user logout by clearing the token and redirecting to the home page.
+   * @returns {void}
+   * @description This function removes the token from local storage, navigates to the home page,
+   * and reloads the window to reflect the changes.
+   */
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
     window.location.reload();
   };
 
+  /**
+   * Handles navigation to the shopping cart.
+   * If the user is not logged in, redirects to the sign-in page.
+   * @returns {void}
+   * @description This function checks if the user is logged in and navigates to the cart page,
+   * or redirects to the sign-in page if not logged in.
+   */
   const handleShoppingCart = () => {
     if (!token) {
       navigate("/signin");
@@ -89,6 +158,15 @@ const Book = () => {
     navigate("/cart");
   };
 
+  /**
+   * Handles adding a book to the cart.
+   * If the user is not logged in, redirects to the sign-in page.
+   * If the book is already added, skips incrementing the cart count.
+   * @param {number} bookId - The ID of the book to add to the cart.
+   * @returns {Promise<void>}
+   * @description This function checks if the user is logged in, adds the book to the cart,
+   * and updates the cart count and added books state.
+   */
   const handleAddToCart = async (bookId: number) => {
     if (!token) {
       navigate("/signin");
@@ -108,6 +186,11 @@ const Book = () => {
     }
   };
 
+  /**
+   * Calculates the paginated books based on the current page and books per page.
+   * @returns {Book[]} The array of books for the current page.
+   * @description This function slices the books array to get only the books for the current page.
+   */
   const paginatedBooks = books.slice(
     (page - 1) * booksPerPage,
     page * booksPerPage
