@@ -6,9 +6,11 @@
   ],
 
   "compilerOptions": {
+    "types": ["jest", "node"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react-jsx",   // important for React 17+
-    "types": ["jest", "@testing-library/jest-dom"]
-  }
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src", "declarations.d.ts"]
 }
