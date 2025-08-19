@@ -1,5 +1,5 @@
 import axios from "axios";
-import  { signUp }  from "../services/userService";
+import { signUp } from "../services/userService";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
