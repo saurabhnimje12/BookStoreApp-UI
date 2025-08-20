@@ -6,11 +6,13 @@
   ],
 
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "@testing-library/jest-dom"],
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
   "include": ["src", "declarations.d.ts"]
+
+
 }

@@ -6,7 +6,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid,
+
   IconButton,
   Menu,
   MenuItem,
@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBooks } from "../services/bookService";
 import { addToCart } from "../services/cartService";
+import Grid from "@mui/material/Grid";
 
 /**
   * Book component that displays a list of books with pagination, user account menu, and cart functionality.
@@ -174,8 +175,8 @@ const Book = () => {
     }
     try {
       if (!addedBooks.includes(bookId)) {
-        setCartCount(prev => prev + 1);            
-        setAddedBooks(prev => [...prev, bookId]);  
+        setCartCount(prev => prev + 1);
+        setAddedBooks(prev => [...prev, bookId]);
         await addToCart(bookId);
         console.log("Book added to cart successfully.");
       } else {
@@ -216,11 +217,29 @@ const Book = () => {
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <IconButton color="inherit" onClick={handleShoppingCart}>
+              {/* <IconButton color="inherit" onClick={handleShoppingCart}>
+                <Badge badgeContent={cartCount} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton> */}
+
+              <IconButton
+                aria-label="shopping cart"
+                color="inherit"
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    navigate("/signin");
+                  } else {
+                    navigate("/cart");
+                  }
+                }}
+              >
                 <Badge badgeContent={cartCount} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
+
+
 
               <IconButton color="inherit" onClick={handleMenuClick}>
                 <AccountCircle />
@@ -231,19 +250,17 @@ const Book = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                {!isLoggedIn ? (
-                  <>
-                    <MenuItem onClick={() => { navigate("/signin"); handleMenuClose(); }}>Sign In</MenuItem>
-                    <MenuItem onClick={() => { navigate("/signup"); handleMenuClose(); }}>Sign Up</MenuItem>
-                  </>
-                ) : (
-                  <>
-                    <MenuItem onClick={() => { navigate("/profile"); handleUpComing(); }}>My Profile</MenuItem>
-                    <MenuItem onClick={() => { navigate("/orders"); handleUpComing(); }}>Orders</MenuItem>
-                    <MenuItem onClick={() => { navigate("/wishlist"); handleUpComing(); }}>Wishlist</MenuItem>
-                    <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>Logout</MenuItem>
-                  </>
-                )}
+                {!isLoggedIn
+                  ? [
+                    <MenuItem key="signin" onClick={() => { navigate("/signin"); handleMenuClose(); }}>Sign In</MenuItem>,
+                    <MenuItem key="signup" onClick={() => { navigate("/signup"); handleMenuClose(); }}>Sign Up</MenuItem>,
+                  ]
+                  : [
+                    <MenuItem key="profile" onClick={() => { navigate("/profile"); handleUpComing(); }}>My Profile</MenuItem>,
+                    <MenuItem key="orders" onClick={() => { navigate("/orders"); handleUpComing(); }}>Orders</MenuItem>,
+                    <MenuItem key="wishlist" onClick={() => { navigate("/wishlist"); handleUpComing(); }}>Wishlist</MenuItem>,
+                    <MenuItem key="logout" onClick={() => { handleLogout(); handleMenuClose(); }}>Logout</MenuItem>,
+                  ]}
               </Menu>
             </Box>
           </Toolbar>
@@ -257,7 +274,7 @@ const Book = () => {
 
         <Grid container spacing={4}>
           {paginatedBooks.map((book) => (
-            <Grid item xs={12} sm={6} md={3} key={book.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={book.bookId}>
               <Card
                 sx={{
                   height: "100%",

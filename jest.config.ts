@@ -7,7 +7,10 @@ const config: Config = {
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
   },
-   setupFilesAfterEnv: ["@testing-library/jest-dom"], // ✅ adds extra matchers
+  setupFilesAfterEnv: [
+    "<rootDir>/src/jest.setup.ts", // ✅ custom setup file
+    "@testing-library/jest-dom",   // ✅ adds matchers like toBeInTheDocument
+  ],
 };
 
 export default config;

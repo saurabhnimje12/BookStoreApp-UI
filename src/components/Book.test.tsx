@@ -4,6 +4,13 @@ import { getBooks } from "../services/bookService";
 import { addToCart } from "../services/cartService";
 import { BrowserRouter } from "react-router-dom";
 
+
+
+beforeEach(() => {
+  localStorage.clear();   // ✅ ensure no token exists
+  mockNavigate.mockClear();
+});
+
 // mock services
 jest.mock("../services/bookService");
 jest.mock("../services/cartService", () => ({
@@ -83,8 +90,9 @@ describe("📚 Book Component", () => {
 
     renderBook();
 
-    const cartButton = await screen.findByRole("button", { name: "" }); // shopping cart icon button
-    fireEvent.click(cartButton);
+     // click shopping cart
+  const cartButton = screen.getByRole("button", { name: /shopping cart/i });
+  fireEvent.click(cartButton);
 
     expect(mockNavigate).toHaveBeenCalledWith("/signin");
   });
